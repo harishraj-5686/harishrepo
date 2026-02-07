@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Attendance</title>
+  <style>
+    body {
+      font-family: Arial;
+      background: #f4f6f8;
+      padding: 40px;
+    }
+
+    .box {
+      background: white;
+      width: 400px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    button {
+      background: #e67e22;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #cf711f;
+    }
+
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Mark Attendance</h2>
+
+  <input id="studentId" placeholder="Student ID">
+  <input id="date" placeholder="YYYY-MM-DD">
+
+  <select id="status">
+    <option value="Present">Present</option>
+    <option value="Absent">Absent</option>
+  </select>
+
+  <button onclick="markAttendance()">Submit</button>
+
+  <div id="msg"></div>
+</div>
+
+<script>
+const ATTENDANCE_API =
+  "https://API_ID.execute-api.ap-south-1.amazonaws.com/prod/attendance";
+
+function markAttendance() {
+  const payload = {
+    studentId: document.getElementById("studentId").value,
+    date: document.getElementById("date").value,
+    status: document.getElementById("status").value
+  };
+
+  fetch(ATTENDANCE_API, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(response => response.json())
+  .then(() => {
+    document.getElementById("msg").innerText =
+      "Attendance recorded and notification sent";
+  })
+  .catch(() => {
+    document.getElementById("msg").innerText =
+      "Failed to record attendance";
+  });
+}
+</script>
+
+</body>
+</html>
